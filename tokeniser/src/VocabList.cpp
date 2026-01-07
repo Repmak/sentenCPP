@@ -2,14 +2,12 @@
 
 namespace nlp::tokenizer {
 
-    bool VocabList::set_token(const std::string& token, uint32_t id, std::optional<SpecialTokenType> type) {
+    bool VocabList::set_token(const std::string& token, uint32_t id) {
         // Check the token and id.
-        if (
-            string_to_id_map_.contains(token) ||
-            (id < id_to_string_map_.size() && !id_to_string_map_[id].empty()))
-        {
-            return false;
-        }
+        if (token.empty() || string_to_id_map_.contains(token)) return false;
+
+        // Check that we don't overwrite data.
+        if (id < id_to_string_map_.size() && !id_to_string_map_[id].empty()) return false;
 
         // Ensure vector is large enough.
         if (id >= id_to_string_map_.size()) id_to_string_map_.resize(id + 1);
@@ -18,10 +16,14 @@ namespace nlp::tokenizer {
         string_to_id_map_[token] = id;
         id_to_string_map_[id] = token;
 
-        // These will be populated by ids 0, 100, 101, 102, and 103.
-        // Refer to the vocab dictionary from tokenizer.json.
-        if (type.has_value()) special_tokens_[type.value()] = id;
-
+        switch (config.get_special_role(token)) {
+            case TokenRole::Padding:   special_ids_.padding = id; break;
+            case TokenRole::Unknown:   special_ids_.unknown = id; break;
+            case TokenRole::Classification:   special_ids_.classification = id; break;
+            case TokenRole::Separator:   special_ids_.separator = id; break;
+            case TokenRole::Mask:   special_ids_.mask = id; break;
+            default: break;
+        }
         return true;
     }
 
