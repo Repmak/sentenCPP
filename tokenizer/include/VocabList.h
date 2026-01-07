@@ -17,17 +17,7 @@ namespace nlp::tokenizer {
         std::optional<std::string> separator = "[SEP]";
         std::optional<std::string> mask = "[MASK]";
 
-        bool is_special(const std::string& token) const {
-            return (
-                padding && token == *padding ||
-                unknown && token == *unknown ||
-                classification && token == *classification ||
-                separator && token == *separator ||
-                mask && token == *mask
-            );
-        }
-
-        TokenRole get_special_role(std::string_view token) const {
+        [[nodiscard]] TokenRole get_special_role(std::string_view token) const {
             if (padding && token == *padding) return TokenRole::Padding;
             if (unknown && token == *unknown) return TokenRole::Unknown;
             if (classification && token == *classification) return TokenRole::Classification;
@@ -52,6 +42,10 @@ namespace nlp::tokenizer {
 
             // Explicitly set an ID to a token.
             bool set_token(const std::string& token, uint32_t id);
+
+            // Getters.
+            [[nodiscard]] const std::unordered_map<std::string, uint32_t>& get_string_to_id_map() const { return string_to_id_map_; }
+            [[nodiscard]] const SpecialTokenIds& get_special_ids() const { return special_ids_; }
 
             [[nodiscard]] std::optional<uint32_t> token_to_id(const std::string& token) const;
             [[nodiscard]] std::optional<std::string> id_to_token(uint32_t id) const;
