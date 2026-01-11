@@ -54,35 +54,120 @@ namespace nlp::tokenizer {
         }
     }
 
+
+    // PUBLIC METHODS --------------------------------------------------------------------------------------------------
+
     TokenRole WordPiece::identify_special_token(uint32_t id) const {
         return TokenRole::None;
     }
 
-    std::vector<Token> WordPiece::encode(std::string_view text) const {
+    std::vector<Token> WordPiece::tokenize(std::string_view text) const {
         std::string normalised_text(text);  // Local copy to work with.
         if (clean_text) clean_text_inplace(normalised_text);
         if (to_lowercase) to_lowercase_inplace(normalised_text);
         if (strip_accents) strip_accents_inplace(normalised_text);
         if (handle_chinese_chars) handle_chinese_chars_inplace(normalised_text);
 
-        std::cout << "normalised text:" << normalised_text << std::endl;
+        std::cout << "Normalised text: " << normalised_text << std::endl;
 
-        // todo
+        std::vector<std::string_view> words = pre_tokenize(normalised_text);
+        std::vector<uint32_t> token_ids;
 
-        return {};
+        for (const auto& word : words) {
+            std::vector<uint32_t> ids = encode_word(word);
+
+            std::cout << "Word: [" << word << "] IDs: ";
+            for (uint32_t id : ids) {
+                std::cout << id << " ";
+            }
+            std::cout << std::endl;
+
+            token_ids.insert(token_ids.end(), ids.begin(), ids.end());
+        }
+
+
+
+        std::vector<Token> tokens;
+
+        return tokens;
     }
 
-    void WordPiece::build_byte_encoder() {
 
-    }
-
-    std::vector<std::string> WordPiece::bpe_merge(std::string_view word) const {
-
-        return {};
-    }
+    // PRIVATE METHODS -------------------------------------------------------------------------------------------------
 
     std::vector<std::string_view> WordPiece::pre_tokenize(std::string_view text) const {
+        std::vector<std::string_view> words;
+        size_t i = 0;
+        size_t n = text.length();
 
+        while (i < n) {
+            // Skip Whitespace.
+            if (std::isspace(static_cast<unsigned char>(text[i]))) {
+                i++;
+                continue;
+            }
+
+            // Separate punctuation.
+            if (std::ispunct(static_cast<unsigned char>(text[i]))) {
+                words.push_back(text.substr(i, 1));
+                i++;
+                continue;
+            }
+
+            size_t start = i;
+            while (
+                i < n &&
+                !std::isspace(static_cast<unsigned char>(text[i])) &&
+                !std::ispunct(static_cast<unsigned char>(text[i]))
+            ) { i++; }
+            words.push_back(text.substr(start, i - start));
+        }
+
+        return words;
+    }
+
+    std::vector<uint32_t> WordPiece::encode_word(std::string_view word) const {
+        std::vector<uint32_t> token_ids;
+        size_t start = 0;
+        const size_t n = word.length();
+
+        // Safety check for UNK token.
+        auto special_ids = vocab_list_->get_special_ids();
+        if (!special_ids.unknown.has_value()) {
+            std::cerr << "Missing special token: Unknown" << std::endl;
+            exit(-1);
+        }
+        uint32_t unknown_id = special_ids.unknown.value();
+
+        while (start < n) {
+            size_t end = n;
+            std::optional<uint32_t> curr_id = std::nullopt;
+
+            while (start < end) {
+                std::string substr(word.substr(start, end - start));
+                if (start > 0) substr.insert(0, "##");
+
+                auto id = vocab_list_->token_to_id(substr);
+                if (id.has_value()) {
+                    curr_id = id;
+                    break;
+                }
+                end--;
+            }
+
+            // If any part of the word is unknown, the entire word becomes the [UNK] token.
+            if (!curr_id.has_value()) return { unknown_id };
+
+            token_ids.push_back(curr_id.value());
+            start = end;
+        }
+
+        return token_ids;
+    }
+
+
+    std::vector<std::string> WordPiece::bpe_merge(std::string_view word) const {
+        // todo
         return {};
     }
 

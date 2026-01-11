@@ -27,7 +27,7 @@ namespace nlp::tokenizer {
             virtual TokenRole identify_special_token(uint32_t id) const = 0;
 
             // Encodes raw text into a Token object.
-            virtual std::vector<Token> encode(std::string_view text) const = 0;
+            virtual std::vector<Token> tokenize(std::string_view text) const = 0;
     };
 
 } // namespace nlp::tokenizer
