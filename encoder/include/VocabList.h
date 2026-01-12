@@ -6,8 +6,7 @@
 #include <unordered_set>
 #include <optional>
 
-namespace nlp::tokenizer {
-
+namespace nlp::encoder {
     enum class TokenRole { None, Padding, Unknown, Classification, Separator, Mask };
 
     struct VocabConfig {
@@ -57,4 +56,4 @@ namespace nlp::tokenizer {
             SpecialTokenIds special_ids_;
     };
 
-} // namespace nlp::tokenizer
+} // namespace nlp::encoder

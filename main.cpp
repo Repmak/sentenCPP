@@ -1,10 +1,10 @@
 #include <iostream>
 #include <iomanip>
-#include "./tokenizer/include/WordPiece.h"
+#include "./encoder/include/WordPiece.h"
 
 int main() {
     try {
-        nlp::tokenizer::WordPiece tokenizer(
+        nlp::encoder::WordPiece encoder(
             std::string(PROJECT_ROOT_PATH) + "/hf_model/tokenizer.json",
             "/model/vocab",
             true,
@@ -14,7 +14,7 @@ int main() {
             128
         );
 
-        const auto& vocab = tokenizer.get_vocab_list();
+        const auto& vocab = encoder.get_vocab_list();
         const auto& string_map = vocab.get_string_to_id_map();
         const auto& special_ids = vocab.get_special_ids();
 
@@ -36,8 +36,8 @@ int main() {
         // check_and_print("Separator", special_ids.separator);
         // check_and_print("Mask", special_ids.mask);
 
-        tokenizer.tokenize("Thé quick Browñ fox   jumps over \n the lázy dog");
-        tokenizer.tokenize("logitech");
+        encoder.encode("Thé quick Browñ fox   jumps over \n the lázy dog");
+        encoder.encode("logitech");
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

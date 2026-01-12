@@ -13,7 +13,7 @@
 
 using json = nlohmann::json;
 
-namespace nlp::tokenizer {
+namespace nlp::encoder {
 
     WordPiece::WordPiece(
         const std::string& config_path,  // Eg: "tokenizer.json".
@@ -61,7 +61,7 @@ namespace nlp::tokenizer {
         return TokenRole::None;
     }
 
-    std::vector<Token> WordPiece::tokenize(std::string_view text) const {
+    std::vector<Token> WordPiece::encode(std::string_view text) const {
         std::string normalised_text(text);  // Local copy to work with.
         if (clean_text) clean_text_inplace(normalised_text);
         if (to_lowercase) to_lowercase_inplace(normalised_text);
@@ -70,32 +70,27 @@ namespace nlp::tokenizer {
 
         std::cout << "Normalised text: " << normalised_text << std::endl;
 
-        std::vector<std::string_view> words = pre_tokenize(normalised_text);
-        std::vector<uint32_t> token_ids;
+        std::vector<std::string_view> words = split_text(normalised_text);
+        std::vector<Token> all_tokens;
 
         for (const auto& word : words) {
-            std::vector<uint32_t> ids = encode_word(word);
+            std::vector<Token> word_tokens = encode_word(word);
+            all_tokens.insert(all_tokens.end(), word_tokens.begin(), word_tokens.end());
 
             std::cout << "Word: [" << word << "] IDs: ";
-            for (uint32_t id : ids) {
-                std::cout << id << " ";
-            }
+            for (Token t : word_tokens) std::cout << t.id << " ";
             std::cout << std::endl;
-
-            token_ids.insert(token_ids.end(), ids.begin(), ids.end());
         }
 
+        // todo post processing
 
-
-        std::vector<Token> tokens;
-
-        return tokens;
+        return all_tokens;
     }
 
 
     // PRIVATE METHODS -------------------------------------------------------------------------------------------------
 
-    std::vector<std::string_view> WordPiece::pre_tokenize(std::string_view text) const {
+    std::vector<std::string_view> WordPiece::split_text(std::string_view text) const {
         std::vector<std::string_view> words;
         size_t i = 0;
         size_t n = text.length();
@@ -126,8 +121,8 @@ namespace nlp::tokenizer {
         return words;
     }
 
-    std::vector<uint32_t> WordPiece::encode_word(std::string_view word) const {
-        std::vector<uint32_t> token_ids;
+    std::vector<Token> WordPiece::encode_word(std::string_view word) const {
+        std::vector<uint32_t> tokens;
         size_t start = 0;
         const size_t n = word.length();
 
@@ -162,13 +157,7 @@ namespace nlp::tokenizer {
             start = end;
         }
 
-        return token_ids;
-    }
-
-
-    std::vector<std::string> WordPiece::bpe_merge(std::string_view word) const {
-        // todo
-        return {};
+        return token;
     }
 
     void WordPiece::clean_text_inplace(std::string& text) const {
@@ -222,4 +211,4 @@ namespace nlp::tokenizer {
             std::cerr << "Warning: Method handle_chinese_chars is not implemented" << std::endl;
     }
 
-} // namespace nlp::tokenizer
+} // namespace nlp::encoder

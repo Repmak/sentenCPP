@@ -1,7 +1,7 @@
 #include <iostream>
 #include "VocabList.h"
 
-namespace nlp::tokenizer {
+namespace nlp::encoder {
 
     bool VocabList::set_token(const std::string& token, uint32_t id) {
         // Check the token and id.
@@ -41,4 +41,4 @@ namespace nlp::tokenizer {
         return token;
     }
 
-} // namespace nlp::tokenizer
+} // namespace nlp::encoder

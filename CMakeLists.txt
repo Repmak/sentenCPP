@@ -9,19 +9,19 @@ find_package(ICU COMPONENTS uc i18n REQUIRED)
 
 add_executable(word-piece-tokenizer
         main.cpp
-        tokenizer/src/ByteLevelBPE.cpp
-        tokenizer/src/WordPiece.cpp
-        tokenizer/src/VocabList.cpp
-        tokenizer/include/ByteLevelBPE.h
-        tokenizer/include/ITokenizer.h
-        tokenizer/include/VocabList.h
-        tokenizer/include/WordPiece.h
+        encoder/src/ByteLevelBPE.cpp
+        encoder/src/WordPiece.cpp
+        encoder/src/VocabList.cpp
+        encoder/include/ByteLevelBPE.h
+        encoder/include/ITokenizer.h
+        encoder/include/VocabList.h
+        encoder/include/WordPiece.h
 )
 
 add_definitions(-DPROJECT_ROOT_PATH="${CMAKE_SOURCE_DIR}")
 
 target_include_directories(word-piece-tokenizer PRIVATE
-        tokenizer/include
+        encoder/include
         ${ICU_INCLUDE_DIRS}
 )
 
