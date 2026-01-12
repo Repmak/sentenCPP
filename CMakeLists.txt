@@ -9,11 +9,9 @@ find_package(ICU COMPONENTS uc i18n REQUIRED)
 
 add_executable(word-piece-tokenizer
         main.cpp
-        encoder/src/ByteLevelBPE.cpp
-        encoder/src/WordPiece.cpp
         encoder/src/VocabList.cpp
-        encoder/include/ByteLevelBPE.h
-        encoder/include/ITokenizer.h
+        encoder/src/WordPiece.cpp
+        encoder/include/IEncoder.h
         encoder/include/VocabList.h
         encoder/include/WordPiece.h
 )
