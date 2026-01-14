@@ -82,14 +82,9 @@ namespace nlp::encoder {
         for (const auto& word : words) {
             std::vector<Token> word_tokens = encode_word(word);
             all_tokens.insert(all_tokens.end(), word_tokens.begin(), word_tokens.end());
-
-            std::cout << "Word: [" << word << "] IDs: ";
-            for (Token t : word_tokens) std::cout << t.id << " ";
-            std::cout << std::endl;
         }
 
         post_processing(all_tokens);
-
         return all_tokens;
     }
 

@@ -5,11 +5,11 @@
 #include <optional>
 #include <iostream>
 
-#include "IEncoder.h"
+#include "EncoderInterface.h"
 
 namespace nlp::encoder {
 
-    class WordPiece : public IEncoder {
+    class WordPiece : public EncoderInterface {
         public:
             WordPiece(
                 const std::string& config_path,
@@ -50,4 +50,5 @@ namespace nlp::encoder {
             void strip_accents_inplace(std::string& text) const;
             void handle_chinese_chars_inplace(std::string& text) const;
     };
+
 } // namespace nlp::encoder
