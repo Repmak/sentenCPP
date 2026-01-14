@@ -4,6 +4,12 @@
 #include "./encoder/include/WordPiece.h"
 #include "./inference/include/ORTWrapper.h"
 
+/**
+ * todo:
+ * segment id is always 0 right now. figure out a solution.
+ * tokens are truncated if there are too many of them. figure out a solution.
+ */
+
 int main() {
     try {
         nlp::encoder::WordPiece encoder(
@@ -25,24 +31,17 @@ int main() {
         //     std::cout << std::left << std::setw(20) << token << " | " << id << std::endl;
         // }
 
-        auto tokens = encoder.encode("Thé quick Browñ fox   jumps over \n the lázy dog");
+        auto tokens = encoder.encode("Thé quick Browñ fox   jumps over \n the lázy dog!... here is another sentence with segment id 1!");
 
-        // std::cout << "\n--- Tokenization Results (" << tokens.size() << " tokens) ---\n";
-        // std::cout << std::left
-        //           << std::setw(6)  << "Index"
-        //           << std::setw(10) << "ID"
-        //           << std::setw(18) << "Token"
-        //           << "Role" << "\n";
-        // std::cout << std::string(45, '-') << "\n";
-        // for (size_t i = 0; i < tokens.size(); ++i) {
-        //     std::cout << std::left
-        //               << std::setw(6)  << i
-        //               << std::setw(10) << tokens[i].id
-        //               << std::setw(18) << tokens[i].text << "\n";
-        // }
+        std::cout << "\n--- Tokenization Results (" << tokens.size() << " tokens) ---\n";
+        std::cout << std::left << std::setw(6) << "Index" << std::setw(10) << "ID" << std::setw(18) << "Token" << "\n";
+        std::cout << std::string(35, '-') << "\n";
+        for (size_t i = 0; i < tokens.size(); ++i) {
+            std::cout << std::left << std::setw(6) << i << std::setw(10) << tokens[i].id  << std::setw(18) << tokens[i].text << "\n";
+        }
 
-        // nlp::inference::OnnxModel model(std::string(PROJECT_ROOT_PATH) + "/hf_model/model.onnx");
-        // std::vector<float> results = model.run(ids, mask, types);
+        // nlp::inference::ORTWrapper model(std::string(PROJECT_ROOT_PATH) + "/hf_model/model.onnx");
+        // std::vector<float> results = model.run(tokens);
         //
         // for (float val : results) {
         //     std::cout << val << " ";

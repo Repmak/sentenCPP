@@ -12,7 +12,7 @@ namespace nlp::encoder {
         int64_t id;              // The numerical ID according to the model's vocabulary.
         std::string text;        // The original string representation (not strictly needed by the Onnx model).
         int64_t attention_mask;  // 1 for real tokens, 0 for padding.
-        int64_t token_type_id;   // Defines what sentence the token belongs to.
+        int64_t segment_id;      // Defines what sentence the token belongs to.
     };
 
     class EncoderInterface {

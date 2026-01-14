@@ -122,6 +122,17 @@ namespace nlp::encoder {
 
             // Separate punctuation.
             if (std::ispunct(static_cast<unsigned char>(text[i]))) {
+                size_t start = i;
+                char punct_char = text[i];
+
+                // Peek ahead to group identical punctuation.
+                while (i < n && text[i] == punct_char && std::ispunct(static_cast<unsigned char>(text[i]))) i++;
+
+                words.push_back(text.substr(start, i - start));
+                continue;
+            }
+
+            if (std::ispunct(static_cast<unsigned char>(text[i]))) {
                 words.push_back(text.substr(i, 1));
                 i++;
                 continue;
@@ -188,22 +199,14 @@ namespace nlp::encoder {
             std::cerr << "Warning: Tokens truncated. max_length = " << max_length << std::endl;
         }
 
-        tokens.insert(
-            tokens.begin(),
-            Token{classification_token_id, "", 1, 0}
-        );
-
-        tokens.push_back(
-            Token{separator_token_id, "", 1, 0}
-        );
+        tokens.insert(tokens.begin(), Token{classification_token_id, "", 1, 0});
+        tokens.push_back(Token{separator_token_id, "", 1, 0});
 
         // Add padding if necessary.
         if (tokens.size() < max_length) {
             tokens.reserve(max_length);
             while (tokens.size() < max_length) {
-                tokens.push_back(
-                    Token{padding_token_id, "", 0, 0}
-                );
+                tokens.push_back(Token{padding_token_id, "", 0, 0});
             }
         }
     }
