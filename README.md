@@ -9,9 +9,9 @@ C++ library for tokenization and embedding extraction. This project enables BERT
 
 todo:
 - fix token segment ids
-- handle sequences which exceed max token length
+- handle sequences which exceed max token length (use overlap and pass each batch into the onnx model)
 - use prefix trie to avoid o(n^2) of max match algo
-- implement bpe and unigram tokenizers
+- implement bpe and unigram tokenizers (not necessary for bert though)
 - support bin/h5 files?
 
 done:
