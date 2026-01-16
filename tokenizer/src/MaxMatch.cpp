@@ -50,8 +50,8 @@ namespace nlp::tokenizer {
             exit(-1);
         }
 
-        json config;
         try {
+            json config;
             file >> config;
             auto vocab = config.at(json::json_pointer(vocab_key));
 
@@ -110,7 +110,7 @@ namespace nlp::tokenizer {
 
     // PRIVATE METHODS -------------------------------------------------------------------------------------------------
 
-    std::vector<std::string_view> MaxMatch::split_text(std::string_view text) const {
+    std::vector<std::string_view> MaxMatch::split_text(std::string_view text) {
         std::vector<std::string_view> words;
         size_t i = 0;
         const size_t n = text.length();

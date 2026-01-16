@@ -3,6 +3,7 @@
 
 #include "./tokenizer/include/MaxMatch.h"
 #include "./inference/include/OnnxEngine.h"
+#include "./embedding_utils/include/VectorMaths.h"
 
 /**
  * todo:
@@ -48,6 +49,11 @@ int main() {
 
         const std::string text = "The weather is great!";
         const auto tokens = tokenizer.tokenize(text);
+
+        const std::string text2 = "the weather is fantastic";
+        // const std::string text2 = "the weather is garbage";
+        const auto tokens2 = tokenizer.tokenize(text2);
+
         // Note: We do not expect vectors for padding to store absolute zeros. Attention mechanism will affect the values.
 
         // std::cout << "\n--- Tokenization Results (" << tokens.size() << " tokens) ---\n";
@@ -62,28 +68,35 @@ int main() {
         );
 
         std::vector<std::vector<float>> embeddings = engine.encode(tokens);
+        std::vector<std::vector<float>> embeddings2 = engine.encode(tokens2);
 
-        std::cout << "--- Token Embeddings Preview ---" << std::endl;
+        // std::cout << "--- Token Embeddings Preview ---" << std::endl;
+        //
+        // for (size_t i = 0; i < tokens.size(); ++i) {
+        //     // Print the token text so we know which vector we're looking at
+        //     std::cout << "Token [" << i << "] (" << tokens[i].text << "): [";
+        //
+        //     const auto& vec = embeddings[i];
+        //     size_t preview_size = 5;
+        //
+        //     // Print first few values
+        //     for (size_t j = 0; j < std::min(vec.size(), preview_size); ++j) {
+        //         printf("% .4f", vec[j]); // Neat formatting with 4 decimal places
+        //         if (j < preview_size - 1) std::cout << ", ";
+        //     }
+        //
+        //     if (vec.size() > preview_size) {
+        //         std::cout << " ... " << vec.back();
+        //     }
+        //
+        //     std::cout << "] (Dim: " << vec.size() << ")" << std::endl;
+        // }
 
-        for (size_t i = 0; i < tokens.size(); ++i) {
-            // Print the token text so we know which vector we're looking at
-            std::cout << "Token [" << i << "] (" << tokens[i].text << "): [";
+        auto sent_vec_1 = nlp::embedding_utils::VectorMaths::mean_pooling(embeddings, tokens);
+        auto sent_vec_2 = nlp::embedding_utils::VectorMaths::mean_pooling(embeddings2, tokens2);
 
-            const auto& vec = embeddings[i];
-            size_t preview_size = 5;
-
-            // Print first few values
-            for (size_t j = 0; j < std::min(vec.size(), preview_size); ++j) {
-                printf("% .4f", vec[j]); // Neat formatting with 4 decimal places
-                if (j < preview_size - 1) std::cout << ", ";
-            }
-
-            if (vec.size() > preview_size) {
-                std::cout << " ... " << vec.back();
-            }
-
-            std::cout << "] (Dim: " << vec.size() << ")" << std::endl;
-        }
+        float similarity = nlp::embedding_utils::VectorMaths::cosine_similarity(sent_vec_1, sent_vec_2);
+        std::cout << "Similarity Score: " << similarity << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;

@@ -42,7 +42,7 @@ namespace nlp::tokenizer {
             std::size_t max_length;
 
             // Splits text by whitespace and punctuation.
-            [[nodiscard]] std::vector<std::string_view> split_text(std::string_view text) const;
+            [[nodiscard]] static std::vector<std::string_view> split_text(std::string_view text);
 
             // Encode each word into one or more tokens (using MaxMatch algorithm).
             [[nodiscard]] std::vector<Token> encode_word(std::string_view word) const;

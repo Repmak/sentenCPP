@@ -23,23 +23,27 @@ add_executable(${PROJECT_NAME}
 
         tokenizer/include/TokenizerInterface.h
         tokenizer/include/VocabList.h
-        tokenizer/include/WordPiece.h
+        tokenizer/include/MaxMatch.h
         tokenizer/src/VocabList.cpp
-        tokenizer/src/WordPiece.cpp
+        tokenizer/src/MaxMatch.cpp
+#        tokenizer/src/BPE.cpp
+#        tokenizer/src/Unigram.cpp
+#        tokenizer/include/Unigram.h
+#        tokenizer/BPE.h
 
         inference/include/InferenceInterface.h
         inference/include/OnnxEngine.h
         inference/src/OnnxEngine.cpp
-        tokenizer/src/BPE.cpp
-        tokenizer/src/Unigram.cpp
-        tokenizer/include/Unigram.h
-        tokenizer/BPE.h
+
+        embedding_utils/include/VectorMaths.h
+        embedding_utils/src/VectorMaths.cpp
 )
 
 # Tells the compiler where to look for include files.
 target_include_directories(${PROJECT_NAME} PRIVATE
         tokenizer/include
         inference/include
+        embedding_utils/include
         ${ICU_INCLUDE_DIRS}
         "${ONNXRUNTIME_ROOT}/include"
 )
