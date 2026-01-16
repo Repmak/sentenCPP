@@ -56,7 +56,7 @@ int main() {
             std::cout << std::left << std::setw(6) << i << std::setw(10) << tokens[i].id  << std::setw(18) << tokens[i].text << "\n";
         }
 
-        cnlp::inference::OnnxEngine engine(
+        nlp::inference::OnnxEngine engine(
             std::get<std::string>(hf_model["model_path"])
         );
 
