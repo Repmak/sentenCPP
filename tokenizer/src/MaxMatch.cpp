@@ -8,14 +8,14 @@
 #include <unicode/unistr.h>
 #include <unicode/translit.h>
 #include <nlohmann/json.hpp>
-#include "WordPiece.h"
+#include "MaxMatch.h"
 
 
 using json = nlohmann::json;
 
 namespace nlp::tokenizer {
 
-    WordPiece::WordPiece(
+    MaxMatch::MaxMatch(
         const std::string& config_path,  // Eg: "tokenizer.json".
         const std::string& vocab_key,  // Eg: "/model/vocab".
         bool clean_text,
@@ -86,7 +86,7 @@ namespace nlp::tokenizer {
 
     // PUBLIC METHODS --------------------------------------------------------------------------------------------------
 
-    std::vector<Token> WordPiece::tokenize(std::string_view text) const {
+    std::vector<Token> MaxMatch::tokenize(std::string_view text) const {
         std::string normalised_text(text);  // Local copy to work with.
         if (clean_text) clean_text_inplace(normalised_text);
         if (to_lowercase) to_lowercase_inplace(normalised_text);
@@ -110,7 +110,7 @@ namespace nlp::tokenizer {
 
     // PRIVATE METHODS -------------------------------------------------------------------------------------------------
 
-    std::vector<std::string_view> WordPiece::split_text(std::string_view text) const {
+    std::vector<std::string_view> MaxMatch::split_text(std::string_view text) const {
         std::vector<std::string_view> words;
         size_t i = 0;
         const size_t n = text.length();
@@ -152,7 +152,7 @@ namespace nlp::tokenizer {
         return words;
     }
 
-    std::vector<Token> WordPiece::encode_word(std::string_view word) const {
+    std::vector<Token> MaxMatch::encode_word(std::string_view word) const {
         std::vector<Token> tokens;
         size_t start = 0;
         const size_t n = word.length();
@@ -189,7 +189,7 @@ namespace nlp::tokenizer {
         return tokens;
     }
 
-    void WordPiece::post_processing(std::vector<Token>& tokens) const {
+    void MaxMatch::post_processing(std::vector<Token>& tokens) const {
         std::string classification_token_str = vocab_list_->get_special_token_val(TokenRole::Classification);
         int64_t classification_token_id = vocab_list_->token_to_id(classification_token_str).value();
         std::string separator_token_str = vocab_list_->get_special_token_val(TokenRole::Separator);
@@ -215,7 +215,7 @@ namespace nlp::tokenizer {
         }
     }
 
-    void WordPiece::clean_text_inplace(std::string& text) const {
+    void MaxMatch::clean_text_inplace(std::string& text) const {
         icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(text);
         icu::UnicodeString cleaned;
         bool last_was_space = false;
@@ -243,12 +243,12 @@ namespace nlp::tokenizer {
         cleaned.toUTF8String(text);
     }
 
-    void WordPiece::to_lowercase_inplace(std::string& text) const {
+    void MaxMatch::to_lowercase_inplace(std::string& text) const {
         std::ranges::transform(text, text.begin(),
             [](unsigned char c) { return std::tolower(c); });
     }
 
-    void WordPiece::strip_accents_inplace(std::string& text) const {
+    void MaxMatch::strip_accents_inplace(std::string& text) const {
         UErrorCode status = U_ZERO_ERROR;
         icu::UnicodeString ustr = icu::UnicodeString::fromUTF8(text);
 
@@ -262,7 +262,7 @@ namespace nlp::tokenizer {
         ustr.toUTF8String(text);
     }
 
-    void WordPiece::handle_chinese_chars_inplace(std::string& text) const {
+    void MaxMatch::handle_chinese_chars_inplace(std::string& text) const {
             std::cerr << "Warning: Method handle_chinese_chars_inplace is not implemented" << std::endl;
     }
 

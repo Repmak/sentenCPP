@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "./tokenizer/include/WordPiece.h"
+#include "./tokenizer/include/MaxMatch.h"
 #include "./inference/include/OnnxEngine.h"
 
 /**
@@ -27,7 +27,7 @@ int main() {
             {"max_length", 128}
         };
 
-        const nlp::tokenizer::WordPiece tokenizer(
+        const nlp::tokenizer::MaxMatch tokenizer(
             std::get<std::string>(hf_model["config_path"]),
             std::get<std::string>(hf_model["vocab_key"]),
             std::get<bool>(hf_model["clean_text"]),
@@ -48,13 +48,14 @@ int main() {
 
         const std::string text = "The weather is great!";
         const auto tokens = tokenizer.tokenize(text);
+        // Note: We do not expect vectors for padding to store absolute zeros. Attention mechanism will affect the values.
 
-        std::cout << "\n--- Tokenization Results (" << tokens.size() << " tokens) ---\n";
-        std::cout << std::left << std::setw(6) << "Index" << std::setw(10) << "ID" << std::setw(18) << "Token" << "\n";
-        std::cout << std::string(35, '-') << "\n";
-        for (size_t i = 0; i < tokens.size(); ++i) {
-            std::cout << std::left << std::setw(6) << i << std::setw(10) << tokens[i].id  << std::setw(18) << tokens[i].text << "\n";
-        }
+        // std::cout << "\n--- Tokenization Results (" << tokens.size() << " tokens) ---\n";
+        // std::cout << std::left << std::setw(6) << "Index" << std::setw(10) << "ID" << std::setw(18) << "Token" << "\n";
+        // std::cout << std::string(35, '-') << "\n";
+        // for (size_t i = 0; i < tokens.size(); ++i) {
+        //     std::cout << std::left << std::setw(6) << i << std::setw(10) << tokens[i].id  << std::setw(18) << tokens[i].text << "\n";
+        // }
 
         nlp::inference::OnnxEngine engine(
             std::get<std::string>(hf_model["model_path"])

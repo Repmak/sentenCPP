@@ -9,9 +9,9 @@
 
 namespace nlp::tokenizer {
 
-    class WordPiece : public TokenizerInterface {
+    class MaxMatch : public TokenizerInterface {
         public:
-            WordPiece(
+            MaxMatch(
                 const std::string& config_path,
                 const std::string& vocab_key,
                 bool clean_text,

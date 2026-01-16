@@ -30,6 +30,10 @@ add_executable(${PROJECT_NAME}
         inference/include/InferenceInterface.h
         inference/include/OnnxEngine.h
         inference/src/OnnxEngine.cpp
+        tokenizer/src/BPE.cpp
+        tokenizer/src/Unigram.cpp
+        tokenizer/include/Unigram.h
+        tokenizer/BPE.h
 )
 
 # Tells the compiler where to look for include files.
