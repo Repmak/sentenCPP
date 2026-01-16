@@ -13,7 +13,7 @@
 
 using json = nlohmann::json;
 
-namespace nlp::encoder {
+namespace nlp::tokenizer {
 
     WordPiece::WordPiece(
         const std::string& config_path,  // Eg: "tokenizer.json".
@@ -86,7 +86,7 @@ namespace nlp::encoder {
 
     // PUBLIC METHODS --------------------------------------------------------------------------------------------------
 
-    std::vector<Token> WordPiece::encode(std::string_view text) const {
+    std::vector<Token> WordPiece::tokenize(std::string_view text) const {
         std::string normalised_text(text);  // Local copy to work with.
         if (clean_text) clean_text_inplace(normalised_text);
         if (to_lowercase) to_lowercase_inplace(normalised_text);
@@ -266,4 +266,4 @@ namespace nlp::encoder {
             std::cerr << "Warning: Method handle_chinese_chars_inplace is not implemented" << std::endl;
     }
 
-} // namespace nlp::encoder
+} // namespace nlp::tokenizer

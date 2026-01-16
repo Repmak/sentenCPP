@@ -5,11 +5,11 @@
 #include <optional>
 #include <iostream>
 
-#include "EncoderInterface.h"
+#include "TokenizerInterface.h"
 
-namespace nlp::encoder {
+namespace nlp::tokenizer {
 
-    class WordPiece : public EncoderInterface {
+    class WordPiece : public TokenizerInterface {
         public:
             WordPiece(
                 const std::string& config_path,
@@ -27,7 +27,7 @@ namespace nlp::encoder {
                 std::string mask_token="[MASK]"
             );
 
-            [[nodiscard]] std::vector<Token> encode(std::string_view text) const override;
+            [[nodiscard]] std::vector<Token> tokenize(std::string_view text) const override;
 
             [[nodiscard]] size_t get_vocab_size() const override { return vocab_list_->size(); }
             [[nodiscard]] const VocabList& get_vocab_list() const { return *vocab_list_; }
@@ -57,4 +57,4 @@ namespace nlp::encoder {
             void handle_chinese_chars_inplace(std::string& text) const;
     };
 
-} // namespace nlp::encoder
+} // namespace nlp::tokenizer

@@ -6,7 +6,7 @@
 
 #include "VocabList.h"
 
-namespace nlp::encoder {
+namespace nlp::tokenizer {
 
     struct Token {
         int64_t id;              // The numerical ID according to the model's vocabulary.
@@ -15,15 +15,15 @@ namespace nlp::encoder {
         int64_t segment_id;      // Defines what sentence the token belongs to.
     };
 
-    class EncoderInterface {
+    class TokenizerInterface {
         public:
-            virtual ~EncoderInterface() = default;
+            virtual ~TokenizerInterface() = default;
 
             // Returns the total vocabulary size.
             [[nodiscard]] virtual size_t get_vocab_size() const = 0;
 
-            // Encodes raw text into a Token object.
-            [[nodiscard]] virtual std::vector<Token> encode(std::string_view text) const = 0;
+            // Tokenize raw text into Token objects.
+            [[nodiscard]] virtual std::vector<Token> tokenize(std::string_view text) const = 0;
     };
 
-} // namespace nlp::encoder
+} // namespace nlp::tokenizer

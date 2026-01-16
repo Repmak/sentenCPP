@@ -21,25 +21,25 @@ find_library(ONNXRUNTIME_LIB
 add_executable(${PROJECT_NAME}
         main.cpp
 
-        encoder/src/VocabList.cpp
-        encoder/src/WordPiece.cpp
-        encoder/include/EncoderInterface.h
-        encoder/include/VocabList.h
-        encoder/include/WordPiece.h
+        tokenizer/include/TokenizerInterface.h
+        tokenizer/include/VocabList.h
+        tokenizer/include/WordPiece.h
+        tokenizer/src/VocabList.cpp
+        tokenizer/src/WordPiece.cpp
 
-#        inference/src/ORTWrapper.cpp
-#        inference/include/ORTWrapper.h
+        inference/include/InferenceInterface.h
+        inference/include/OnnxEngine.h
+        inference/src/OnnxEngine.cpp
 )
 
 # Tells the compiler where to look for include files.
 target_include_directories(${PROJECT_NAME} PRIVATE
-        encoder/include
+        tokenizer/include
         inference/include
         ${ICU_INCLUDE_DIRS}
         "${ONNXRUNTIME_ROOT}/include"
 )
 
-#
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${ONNXRUNTIME_LIB}
         $<$<TARGET_EXISTS:ICU::uc>:ICU::uc>

@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <optional>
 
-namespace nlp::encoder {
+namespace nlp::tokenizer {
 
     enum class TokenRole { Padding, Unknown, Classification, Separator, Mask };
 
@@ -43,4 +43,4 @@ namespace nlp::encoder {
             // };
     };
 
-} // namespace nlp::encoder
+} // namespace nlp::tokenizer
