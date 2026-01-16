@@ -5,6 +5,7 @@ Still in development!
 todo:
 - fix token segment ids
 - handle sequences which exceed max token length
+- use prefix trie to avoid o(n^2) of max match algo
 - implement bpe and unigram tokenizers
 - support bin/h5 files?
 
