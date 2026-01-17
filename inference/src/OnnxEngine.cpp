@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 #include "OnnxEngine.h"
 
 
@@ -126,42 +125,5 @@ namespace sentencpp::inference {
 
 
     // PRIVATE METHODS -------------------------------------------------------------------------------------------------
-
-    // void ORTWrapper::post_processing(std::vector<float>& raw_logits, size_t num_tokens) {}
-    //
-    // std::vector<float> ORTWrapper::perform_pooling(const std::vector<float>& raw_logits, size_t num_tokens) {
-    //     const size_t embedding_dim = 384;  // Fixed for all-MiniLM-L6-v2.
-    //     std::vector<float> sentence_embedding(embedding_dim, 0.0f);
-    //
-    //     for (size_t i = 0; i < num_tokens; ++i) {
-    //         for (size_t d = 0; d < embedding_dim; ++d) {
-    //             sentence_embedding[d] += raw_logits[i * embedding_dim + d];
-    //         }
-    //     }
-    //
-    //     // Divide by the number of tokens to get the average.
-    //     for (float& val : sentence_embedding) val /= static_cast<float>(num_tokens);
-    //
-    //     return sentence_embedding;
-    // }
-    //
-    // std::vector<float> ORTWrapper::calculate_softmax(const std::vector<float>& logits) {
-    //     std::vector<float> probabilities(logits.size());
-    //
-    //     // Find max element.
-    //     float max_logit = *std::max_element(logits.begin(), logits.end());
-    //
-    //     float sum = 0.0f;
-    //     for (size_t i = 0; i < logits.size(); ++i) {
-    //         probabilities[i] = std::exp(logits[i] - max_logit);
-    //         sum += probabilities[i];
-    //     }
-    //
-    //     for (float& p : probabilities) {
-    //         p /= sum;
-    //     }
-    //
-    //     return probabilities;
-    // }
 
 } // namespace sentencpp::inference
