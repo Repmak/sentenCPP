@@ -37,6 +37,8 @@ add_executable(${PROJECT_NAME}
 
         embedding_utils/include/VectorMaths.h
         embedding_utils/src/VectorMaths.cpp
+        example_usage_1.cpp
+        example_usage_2.cpp
 )
 
 # Tells the compiler where to look for include files.
