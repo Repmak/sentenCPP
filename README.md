@@ -1,6 +1,6 @@
 # SentenCPP
 
-Still in development!
+Still in development! (sorry the content below is also not done yet!)
 
 ## 1. Overview
 SentenCPP is a C++20 library designed to replicate the ease of use of the Python library `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
@@ -27,26 +27,27 @@ optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task de
 ### 2.2 Configuring ICU4C
 SentenCPP relies on `ICU4C` for text normalisation. You must ensure that CMake can locate the library on your system.
 
-**Step 1:** Run the following build.
+**Step 1:** Run the following build (or the Win/Linux equivalent).
 ```bash
 mkdir build && cd build
 cmake .. -DICU_ROOT=/opt/homebrew/opt/icu4c
 make
 ```
 
-**Step 2:** Within CLion, go to: `Settings` > `Build, Execution, Deployment` > `CMake` and set `CMake Options` to `-DICU_ROOT=/opt/homebrew/opt/icu4c` (or the Win/Linux equivalent).
+**Step 2:** Within CLion, go to: `Settings` > `Build, Execution, Deployment` > `CMake` and set `CMake Options` to `-DICU_ROOT=/opt/homebrew/opt/icu4c`.
 
 
 ### 2.3 Other library dependencies
 todo
 
 
-## 3. Get Started
-This section will outline all the key details to get SentenCPP working on your machine.
+## 3. Example Usage
+todo
 
 
-## 4. Get Started
-This section will outline all the key details to get SentenCPP working on your machine.
+## 4. API Reference
+todo
+
 
 ## 5. Suggestions & Feedback
 
