@@ -34,7 +34,7 @@ cmake .. -DICU_ROOT=/opt/homebrew/opt/icu4c
 make
 ```
 
-**Step 2:** Within CLion, go to: `Settings` > `Build, Execution, Deployment` > `CMake` and set `CMake Options` to `-DICU_ROOT=/opt/homebrew/opt/icu4c`.
+**Step 2:** Within CLion, go to: `Settings` > `Build, Execution, Deployment` > `CMake` and set the `CMake Options` field to `-DICU_ROOT=/opt/homebrew/opt/icu4c`.
 
 
 ### 2.3 Other library dependencies
