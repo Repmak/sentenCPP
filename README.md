@@ -4,7 +4,7 @@ Still in development!
 
 ## Overview
 
-SentenCPP is a C++20 library designed to replicate the ease of use of Python's `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
+SentenCPP is a C++20 library designed to replicate the ease of use of the Python library `sentence-transformers`. It provides an end-to-end pipeline from raw text tokenization to vector embeddings optimised for low-latency production environments where applications would otherwise be bottlenecked by Python's interpreter.
 
 
 ## Get Started
