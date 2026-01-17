@@ -9,39 +9,32 @@
 int main() {
     try {
         nlp::tokenizer::WordPieceConfig config;
-        config.config_path = std::string(PROJECT_ROOT_PATH) + "/onnx_models/sentence-transformers-all-mini-lm-l6-v2/tokenizer.json";
+        // config.config_path = std::string(PROJECT_ROOT_PATH) + "/onnx_models/sentence-transformers-all-mini-lm-l6-v2/tokenizer.json";
         config.vocab_key = "/model/vocab";
+        config.config_path = std::string(PROJECT_ROOT_PATH) + "/onnx_models/distilbert-base-uncased/tokenizer.json";
 
         const nlp::tokenizer::WordPiece tokenizer(config);
 
-        // const auto& vocab = encoder.get_vocab_list();
-        // std::unordered_map<std::string, int64_t> string_map = vocab.get_string_to_id_map();
-        // std::cout << std::left << std::setw(20) << "Token" << " | " << "ID" << std::endl;
-        // std::cout << std::string(30, '-') << std::endl;
-        // for (const auto& [token, id] : string_map) {
-        //     std::cout << std::left << std::setw(20) << token << " | " << id << std::endl;
-        // }
+        // std::cout << tokenizer.get_vocab_list() << std::endl;
 
         const std::string text = "The weather is great!";
         const auto tokens = tokenizer.tokenize(text);
-
-        const std::string text2 = "the weather is fantastic";
-        // const std::string text2 = "the weather is garbage";
+        const std::string text2 = "the weather is bad";
         const auto tokens2 = tokenizer.tokenize(text2);
 
-        // Note: We do not expect vectors for padding to store absolute zeros. Attention mechanism will affect the values.
+        // for (size_t i = 0; i < tokens.size(); ++i) std::cout << i << ": " << tokens[i] << "\n";
+        // for (size_t i = 0; i < tokens.size(); ++i) std::cout << i << ": " << tokens2[i] << "\n";
 
-        // std::cout << "\n--- Tokenization Results (" << tokens.size() << " tokens) ---\n";
-        // std::cout << std::left << std::setw(6) << "Index" << std::setw(10) << "ID" << std::setw(18) << "Token" << "\n";
-        // std::cout << std::string(35, '-') << "\n";
-        // for (size_t i = 0; i < tokens.size(); ++i) {
-        //     std::cout << std::left << std::setw(6) << i << std::setw(10) << tokens[i].id  << std::setw(18) << tokens[i].text << "\n";
-        // }
+        nlp::inference::ModelConfig model_config;
+        // model_config.output_name = "logits";
 
         nlp::inference::OnnxEngine engine(
-            std::string(PROJECT_ROOT_PATH) + "/onnx_models/sentence-transformers-all-mini-lm-l6-v2/model.onnx"
+            std::string(PROJECT_ROOT_PATH) + "/onnx_models/sentence-transformers-all-mini-lm-l6-v2/model.onnx",
+            // std::string(PROJECT_ROOT_PATH) + "/onnx_models/distilbert-base-uncased/model.onnx",
+            model_config
         );
 
+        // Note: It is normal for vector embeddings of padding tokens to not store absolute zeros. Attention mechanism will affect the values.
         std::vector<std::vector<float>> embeddings = engine.encode(tokens);
         std::vector<std::vector<float>> embeddings2 = engine.encode(tokens2);
 

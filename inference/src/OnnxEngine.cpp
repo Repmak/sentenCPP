@@ -6,8 +6,10 @@
 namespace nlp::inference {
 
     OnnxEngine::OnnxEngine(
-        const std::string& model_path
+        const std::string& model_path,
+        const ModelConfig& config
     ) :
+        config_(config),
         env(ORT_LOGGING_LEVEL_WARNING, "BERT_Inference"),
         session(nullptr),
         memory_info(Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault))
@@ -48,102 +50,79 @@ namespace nlp::inference {
             segment_ids.push_back(t.segment_id);
         }
 
+        std::vector<Ort::Value> input_tensors;
+        std::vector<const char*> in_names;
         const std::vector<int64_t> input_shape = {1, static_cast<int64_t>(sequence_length)};
 
-        auto input_tensor = Ort::Value::CreateTensor<int64_t>(
-            memory_info, input_ids.data(), input_ids.size(), input_shape.data(), input_shape.size()
-        );
-        auto mask_tensor = Ort::Value::CreateTensor<int64_t>(
-            memory_info, attention_mask.data(), attention_mask.size(), input_shape.data(), input_shape.size()
-        );
-        auto segment_tensor = Ort::Value::CreateTensor<int64_t>(
-            memory_info, segment_ids.data(), segment_ids.size(), input_shape.data(), input_shape.size()
-        );
+        for (const auto& name : input_names) {
+            in_names.push_back(name.c_str());
+            if (name == config_.input_ids_name) {
+                input_tensors.push_back(Ort::Value::CreateTensor<int64_t>(
+                    memory_info, input_ids.data(), input_ids.size(), input_shape.data(), input_shape.size()
+                ));
+            } else if (name == config_.attention_mask_name) {
+                input_tensors.push_back(Ort::Value::CreateTensor<int64_t>(
+                    memory_info, attention_mask.data(), attention_mask.size(), input_shape.data(), input_shape.size()
+                ));
+            } else if (name == config_.token_type_ids_name) {
+                input_tensors.push_back(Ort::Value::CreateTensor<int64_t>(
+                    memory_info, segment_ids.data(), segment_ids.size(), input_shape.data(), input_shape.size()
+                ));
+            }
+        }
 
-        // todo rewrite so that the tensors are pushed in the correct order regardless of the model entered.
-        std::vector<Ort::Value> inputs;
-        inputs.push_back(std::move(input_tensor));
-        inputs.push_back(std::move(mask_tensor));
-        inputs.push_back(std::move(segment_tensor));
-
-        // Convert vector of strings to vector of const char* for API compatibility.
-        std::vector<const char*> in_names;
-        for (const auto& name : input_names) in_names.push_back(name.c_str());
         std::vector<const char*> out_names;
         for (const auto& name : output_names) out_names.push_back(name.c_str());
 
         auto output_tensors = session.Run(
             Ort::RunOptions{nullptr},
             in_names.data(),
-            inputs.data(),
-            inputs.size(),
+            input_tensors.data(),
+            input_tensors.size(),
             out_names.data(),
             out_names.size()
         );
 
-        // Parse Output.
-        float* output_data = output_tensors[0].GetTensorMutableData<float>();
-        auto shape_info = output_tensors[0].GetTensorTypeAndShapeInfo().GetShape();
+        // Find the output data line.
+        size_t output_idx = -1;
+        for (size_t i = 0; i < output_names.size(); ++i) {
+            if (output_names[i] == config_.output_name) {
+                output_idx = i;
+                break;
+            }
+        }
 
-        // shape_info[0] = 1 (batch)
-        // shape_info[1] = sequence_length
-        // shape_info[2] = hidden_size (e.g., 768)
-        int64_t hidden_size = shape_info[2];
+        if (output_idx == -1) {
+            std::cerr << "Unable to identify output line " << config_.output_name << std::endl;
+            exit(-1);
+        }
+
+        // Parse Output.
+        auto& output_tensor = output_tensors[output_idx];
+        float* output_data = output_tensor.GetTensorMutableData<float>();
+        const auto shape_info = output_tensor.GetTensorTypeAndShapeInfo().GetShape();
 
         std::vector<std::vector<float>> embeddings;
-        embeddings.reserve(sequence_length);
 
-        for (size_t i = 0; i < sequence_length; ++i) {
-            // Calculate pointer offset for each token.
-            float* start = output_data + (i * hidden_size);
-            float* end = start + hidden_size;
-            embeddings.emplace_back(start, end);
+        if (shape_info.size() == 3) {
+            // 3D output.
+            const int64_t num_tokens = shape_info[1];
+            const int64_t hidden_size = shape_info[2];
+
+            embeddings.reserve(num_tokens);
+            for (int64_t i = 0; i < num_tokens; ++i) {
+                float* start = output_data + (i * hidden_size);
+                embeddings.emplace_back(start, start + hidden_size);
+            }
+        }
+        else if (shape_info.size() == 2) {
+            // 2D output.
+            const int64_t hidden_size = shape_info[1];
+            embeddings.emplace_back(output_data, output_data + hidden_size);
         }
 
         return embeddings;
     }
-
-    // std::vector<float> ORTWrapper::run(const std::vector<encoder::Token>& tokens) {
-    //     const size_t seq_len = tokens.size();
-    //     const std::vector<int64_t> input_shape = { 1, static_cast<int64_t>(seq_len) };
-    //
-    //     std::vector<int64_t> ids, mask, segments;
-    //     ids.reserve(seq_len);
-    //     mask.reserve(seq_len);
-    //     segments.reserve(seq_len);
-    //
-    //     for (const auto& t : tokens) {
-    //         ids.push_back(t.id);
-    //         mask.push_back(t.attention_mask);
-    //         segments.push_back(t.segment_id);
-    //     }
-    //
-    //     std::vector<Ort::Value> input_tensors;
-    //     input_tensors.push_back(Ort::Value::CreateTensor<int64_t>(memory_info, ids.data(), ids.size(), input_shape.data(), input_shape.size()));
-    //     input_tensors.push_back(Ort::Value::CreateTensor<int64_t>(memory_info, mask.data(), mask.size(), input_shape.data(), input_shape.size()));
-    //     input_tensors.push_back(Ort::Value::CreateTensor<int64_t>(memory_info, segments.data(), segments.size(), input_shape.data(), input_shape.size()));
-    //
-    //     std::vector<const char*> input_names_char;
-    //     for (const auto& name : input_names) input_names_char.push_back(name.c_str());
-    //
-    //     std::vector<const char*> output_names_char;
-    //     for (const auto& name : output_names) output_names_char.push_back(name.c_str());
-    //
-    //     auto output_tensors = session.Run(
-    //         Ort::RunOptions{nullptr},
-    //         input_names_char.data(),
-    //         input_tensors.data(),
-    //         input_tensors.size(),
-    //         output_names_char.data(),
-    //         output_names_char.size()
-    //     );
-    //
-    //     float* float_ptr = output_tensors.front().GetTensorMutableData<float>();
-    //     size_t total_elements = output_tensors.front().GetTensorTypeAndShapeInfo().GetElementCount();
-    //     std::vector raw_results(float_ptr, float_ptr + total_elements);
-    //
-    //     return perform_pooling(raw_results, total_elements);
-    // }
 
 
     // PRIVATE METHODS -------------------------------------------------------------------------------------------------

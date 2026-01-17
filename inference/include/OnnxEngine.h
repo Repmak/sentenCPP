@@ -8,13 +8,22 @@
 
 namespace nlp::inference {
 
+    struct ModelConfig {
+        std::string input_ids_name = "input_ids";
+        std::string attention_mask_name = "attention_mask";
+        std::string token_type_ids_name = "token_type_ids";
+        std::string output_name = "last_hidden_state";
+    };
+
     class OnnxEngine : public InferenceInterface {
         public:
-            OnnxEngine(const std::string& model_path);
+            OnnxEngine(const std::string& model_path, const ModelConfig& config);
 
             [[nodiscard]] std::vector<std::vector<float>> encode(const std::vector<tokenizer::Token>& tokens) override;
 
         private:
+            ModelConfig config_;  // For configuring data lines in/out of the model.
+
             Ort::Env env;
             Ort::Session session;
             Ort::MemoryInfo memory_info;
