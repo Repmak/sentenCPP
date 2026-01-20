@@ -1,8 +1,8 @@
 #pragma once
 
-#include <TokenizerInterface.h>
 #include <onnxruntime_cxx_api.h>
 #include <vector>
+#include <sentenCPP/tokenizer/TokenizerInterface.h>
 
 namespace sentencpp::inference {
 

@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <TokenizerInterface.h>
+#include <sentenCPP/tokenizer/TokenizerInterface.h>
 #include "InferenceInterface.h"
 
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <iomanip>
-#include "VocabList.h"
+#include <sentenCPP/tokenizer/VocabList.h>
 
 namespace sentencpp::tokenizer {
 

@@ -1,6 +1,6 @@
 #include <vector>
 #include <cmath>
-#include "VectorMaths.h"
+#include <sentenCPP/embedding_utils/VectorMaths.h>
 
 namespace sentencpp::embedding_utils {
 

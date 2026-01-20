@@ -1,9 +1,9 @@
 #include <iostream>
 #include <iomanip>
 
-#include "WordPiece.h"
-#include "OnnxEngine.h"
-#include "VectorMaths.h"
+#include <sentenCPP/tokenizer/WordPiece.h>
+#include <sentenCPP/inference/OnnxEngine.h>
+#include <sentenCPP/embedding_utils/VectorMaths.h>
 
 
 int main() {

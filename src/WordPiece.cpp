@@ -8,7 +8,8 @@
 #include <unicode/unistr.h>
 #include <unicode/translit.h>
 #include <nlohmann/json.hpp>
-#include "WordPiece.h"
+#include <sentenCPP/tokenizer/VocabList.h>
+#include <sentenCPP/tokenizer/WordPiece.h>
 
 using json = nlohmann::json;
 

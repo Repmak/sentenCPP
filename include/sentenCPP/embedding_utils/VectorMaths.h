@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <TokenizerInterface.h>
+#include <sentenCPP/tokenizer/TokenizerInterface.h>
 
 namespace sentencpp::embedding_utils {
 

@@ -2,9 +2,9 @@
 
 #include <string>
 #include <vector>
-#include <optional>
 #include <iostream>
-#include "TokenizerInterface.h"
+#include <sentenCPP/tokenizer/VocabList.h>
+#include <sentenCPP/tokenizer/TokenizerInterface.h>
 
 namespace sentencpp::tokenizer {
 

@@ -40,18 +40,18 @@ target_link_libraries(onnxruntime_external INTERFACE ${ONNXRUNTIME_LIB})
 
 # Library target
 add_library(sentencpp STATIC
-        tokenizer/src/VocabList.cpp
-        tokenizer/src/WordPiece.cpp
-        inference/src/OnnxEngine.cpp
-        embedding_utils/src/VectorMaths.cpp
+        src/VocabList.cpp
+        src/WordPiece.cpp
+        src/OnnxEngine.cpp
+        src/VectorMaths.cpp
 )
 
 target_include_directories(sentencpp
         PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tokenizer/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inference/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/embedding_utils/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+            ${ICU_INCLUDE_DIRS}
 )
 
 target_link_libraries(sentencpp

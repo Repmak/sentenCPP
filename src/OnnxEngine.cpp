@@ -1,5 +1,6 @@
 #include <iostream>
-#include "OnnxEngine.h"
+#include <sentencpp/tokenizer/TokenizerInterface.h>
+#include <sentencpp/inference/OnnxEngine.h>
 
 
 namespace sentencpp::inference {
