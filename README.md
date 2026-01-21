@@ -22,7 +22,7 @@ Before installing **sentenCPP**, you need to set up two core dependencies:
 #### 2. CMake Setup
 The easiest way to include **sentenCPP** in your project is using CMake's `FetchContent` module. This will also automatically handle the `nlohmann_json` dependency.
 
-```CMake
+```cmake
 cmake_minimum_required(VERSION 3.20)
 project(my_app LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
@@ -65,7 +65,7 @@ optimum-cli export onnx --model sentence-transformers/all-MiniLM-L6-v2 --task de
 #### 5. All Done!
 The following snippet demonstrates how to tokenize text, generate embeddings, and calculate the cosine similarity between two sentences. Ensure the paths to `tokenizer.json` and `model.onnx` have been updated.
 
-```C++
+```cpp
 #include <iostream>
 #include <sentencpp/tokenizer/WordPiece.h>
 #include <sentencpp/inference/OnnxEngine.h>
