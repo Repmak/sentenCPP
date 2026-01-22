@@ -3,11 +3,11 @@
 ## Overview
 **sentenCPP** is a C++20 library designed to replicate the functionality and ease of use of the Python library `sentence-transformers`. It provides a complete pipeline from **text tokenization** to **vector embeddings**, extending to **mathematical operations** for analysis.
 
-While NLP in C++ is entirely possible using various high-performance tools, the process of manually stitching these libraries together is often time-consuming and complex. **sentenCPP** is not intended to replace hyper-specialised libraries. It aims to eliminate the friction inherent to C++ development.
+While NLP in C++ is entirely possible using various high-performance tools, the process of manually integrating these libraries together is often time-consuming and complex. **sentenCPP** aims to eliminate the friction inherent to this workflow. However, it is not intended to replace hyper-specialised libraries.
 
 
 ## Development Status
-This project is still in development. As of right now, BERT, RoBERTa, and DistilBERT models are supported by the inference engine. Furthermore, the engine can perform semantic search, semantic analysis, and named entity extraction, but does not yet support autoregressive text generation or cross-encoding tasks. 
+This project is still in development. As of right now, BERT, RoBERTa, and DistilBERT models are supported by the inference engine. Furthermore, the engine can perform semantic search, semantic analysis, and named entity extraction. However, it does not yet support autoregressive text generation or cross-encoding tasks. 
 
 
 ## Getting Started
