@@ -46,7 +46,7 @@ mkdir build && cd build
 
 cmake .. \
   -DICU_ROOT=/path/to/your/icu4c \
-  -DONNXRUNTIME_ROOT=/path/to/your/onnxruntime-osx-arm64-1.23.2
+  -DONNXRUNTIME_ROOT=/path/to/your/onnxruntime-directory
 
 cmake --build .
 ```
