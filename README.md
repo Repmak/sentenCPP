@@ -20,7 +20,7 @@ Before installing **sentenCPP**, you need to set up two core dependencies:
 - ONNX Runtime: This is the engine used to run the machine learning models. This can be download directly from the [**ONNX Runtime Releases**](https://github.com/microsoft/onnxruntime/releases). Extract it to a known directory.
 
 #### 2. CMake Setup
-The easiest way to include **sentenCPP** in your project is using CMake's `FetchContent` module. This will also automatically handle the `nlohmann_json` dependency.
+The easiest way to include **sentenCPP** in your project is by using CMake's `FetchContent` module. This will also automatically handle the `nlohmann_json` dependency.
 
 ```cmake
 cmake_minimum_required(VERSION 3.20)
